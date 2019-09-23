@@ -44,9 +44,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_VAL_STEP 17
 
 // Underglow
-/*
 #undef RGBLED_NUM
-#define RGBLED_NUM 14    // Number of LEDs
+#define RGB_DI_PIN D3
+#define RGBLED_NUM 14
+#define RGBLED_SPLIT 7
 #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_SLEEP
-*/

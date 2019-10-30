@@ -1,1 +1,1 @@
-# The default Preonic layout - largely based on the Planck's
+# My personal layout, matching the one on my Lily58

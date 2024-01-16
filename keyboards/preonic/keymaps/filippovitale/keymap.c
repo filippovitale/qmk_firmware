@@ -33,6 +33,18 @@ enum preonic_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
+// Reviung41
+// --------------------------------------------------------------------------------------------------------------------
+// | LALT  (TAB) |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | LALT  (BSPC) |
+// | LCTRL (ESC) |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  | LCTRL ( RET) |
+// |  SHFT ( ` ) |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | SHFT  (   ') |
+//                          | LGUI ([) | LWR |  SPC  | RSE  | LGUI (]) |
+//
+//   &mt  LALT   TAB &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U &kp I     &kp O   &kp P    &mt  LALT BSPC
+//   &mt LCTRL   ESC &kp A &kp S &kp D &kp F &kp G   &kp H &kp J &kp K     &kp L   &kp SEMI &mt LCTRL  RET
+//   &mt LSHFT GRAVE &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M &kp COMMA &kp DOT &kp FSLH &mt RSHFT  SQT
+//           &mt LGUI LBKT &mo LOWER_LAYER   &kp SPACE   &mo RAISE_LAYER  &mt LGUI RBKT
+
 /* Qwerty
  * ,-----------------------------------------------------------------------------------.
  * | Esc  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
@@ -56,6 +68,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  KC_LALT, KC_LGUI, LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_ALGR, KC_MPLY, KC_PGDN, KC_PGUP  \
 ),
 
+// Reviung41
+// ------------------------------------------------------------------------------
+// |    |     |     |     |     |     |   |     |     |  -  |  =  |  \  | BSPC |
+// |    |     |     |     |     |     |   |  6  |  7  |  8  |  9  |  0  |      |
+// |    |     |     |     |     |     |   |     |     |     |     |     |      |
+//                       |     |     |     | ADJ |     |
+//
+//   &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &kp MINUS  &kp EQUAL  &kp BACKSLASH &kp BSPC
+//   &trans  &trans  &trans  &trans  &trans  &trans  &kp N6  &kp N7  &kp N8     &kp N9     &kp N0        &trans
+//   &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans     &trans     &trans        &trans
+//                  &trans      &trans       &trans        &mo ADJUST_LAYER       &trans
+
 /* Lower
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      |      |      |      |   -  |  =   |
@@ -76,6 +100,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,  \
   XXXXXXX, XXXXXXX, _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
+
+// Reviung41
+// -----------------------------------------------------------------------------------------
+// |    |     |     |     |     |     |   |     |      |      |     |       | DEL |
+// |    |  1  |  2  |  3  |  4  |  5  |   |     | Left | Down |  Up | Right |     |
+// |    |     |     |     |     |     |   |     |      |      |     |       |     |
+//                       |     | ADJ |     |     |     |
+//
+//   &trans  &trans  &trans &trans  &trans  &trans  &trans  &trans    &trans    &trans  &trans     &kp DEL
+//   &trans  &kp N1  &kp N2 &kp N3  &kp N4  &kp N5  &trans  &kp LEFT  &kp DOWN  &kp UP  &kp RIGHT  &trans
+//   &trans  &trans  &trans &trans  &trans  &trans  &trans  &trans    &trans    &trans  &trans     &trans
+//                  &trans      &mo ADJUST_LAYER       &trans        &trans       &trans
+
 
 /* Raise
  * ,-----------------------------------------------------------------------------------.
@@ -98,6 +135,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   XXXXXXX, XXXXXXX, _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \
 ),
 
+// Reviung41
+// -----------------------------------------------------------------------------------------
+// |    F1    |    F2    |    F3    |    F4       |     F5         |    F6           |    |  F7 |     F8      |  F9  | F10  | F11  | F12    |
+// |          |          |          |             | Spectacle+F    |                 |    | BT1 |     BT2     | BT3  | BT4  | BT5  | BT CLR |
+// |   Mute   | Vol_Down |  Vol_Up  | Spectacle+C | Spectacle+Left | Spectacle+Right |    |     | Spectacle+M | PREV | PLAY | NEXT |        |
+//                                               |     |     |      |     |     |
+//
+//   &kp F1     &kp F2       &kp F3       &kp F4            &kp F5               &kp F6                &kp F7       &kp F8            &kp F9       &kp F10      &kp F11      &kp F12
+//   &none      &none        &none        &none             &kp LA(LS(LG(F)))    &none                 &bt BT_SEL 0 &bt BT_SEL 1      &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &bt BT_CLR
+//   &kp K_MUTE &kp C_VOL_DN &kp K_VOL_UP &kp LA(LS(LG(C))) &kp LA(LS(LG(LEFT))) &kp LA(LS(LG(RIGHT))) &none        &kp LA(LS(LG(M))) &kp C_PREV   &kp C_PP     &kp C_NEXT   &none
+//                                          &trans      &trans       &trans        &trans       &trans
+
 /* Adjust (Lower + Raise)
  * ,-----------------------------------------------------------------------------------.
  * |      |      |      |      |      |      |      |      |      |      |      |      |
@@ -113,7 +162,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_ADJUST] = LAYOUT_preonic_grid( \
   XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  \
-  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  \
+  c,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  \
   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,  \
   _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,  \
   XXXXXXX, XXXXXXX, _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX  \

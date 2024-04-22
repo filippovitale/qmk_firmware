@@ -4,7 +4,7 @@
 
 - `qmk flash -kb preonic/rev3 -km filippovitale`
 - `make preonic/rev3:filippovitale:dfu-util`
-
+- (compile only: `qmk compile {keymap}`)
 
 ## Config online and flash
 
@@ -14,6 +14,9 @@
 - `qmk setup`
 - `qmk flash -bl dfu-util ~/Downloads/preonic_rev3_drop_preonic_rev3_drop_layout_preonic_1x2uc_mine.bin`
 
+## Convert JSON config file to a keymap.c
+
+- `qmk json2c {keymap}`
 
 # Resources
 

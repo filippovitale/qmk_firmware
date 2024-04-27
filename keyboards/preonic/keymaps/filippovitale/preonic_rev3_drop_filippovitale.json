@@ -46,7 +46,7 @@
       "KC_SCLN",
       "LCTL_T(KC_ENT)",
 
-      "MOD_LSFT(KC_GRV)",
+      "LSFT_T(KC_GRV)",
       "KC_Z",
       "KC_X",
       "KC_C",
@@ -57,16 +57,16 @@
       "KC_COMM",
       "KC_DOT",
       "KC_SLSH",
-      "MOD_LSFT(KC_QUOT)",
+      "LSFT_T(KC_QUOT)",
 
       "KC_NO",
       "KC_NO",
       "KC_NO",
-      "MOD_LGUI(KC_LBRC)",
+      "LGUI_T(KC_LBRC)",
       "MO(1)",
       "KC_SPC",
       "MO(2)",
-      "MOD_LGUI(KC_RBRC)",
+      "LGUI_T(KC_RBRC)",
       "KC_NO",
       "KC_NO",
       "KC_NO"

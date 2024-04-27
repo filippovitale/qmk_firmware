@@ -20,4 +20,9 @@
 
 # Resources
 
+- [QMK config](https://config.qmk.fm/)
+  - [QMK keyboard test](https://config.qmk.fm/#/test)
+- [QMK codes](https://github.com/qmk/qmk_firmware/blob/master/docs/keycodes.md)
+  - [QMK mod tap](https://github.com/qmk/qmk_firmware/blob/master/docs/mod_tap.md)
+- [ZMK codes](https://zmk.dev/docs/codes)
 - https://maxzsol.com/step-by-step-guide-to-setting-up-qmk-for-the-planck-on-macos/

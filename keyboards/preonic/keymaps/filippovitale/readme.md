@@ -12,7 +12,8 @@
 - open `keyboards/preonic/keymaps/filippovitale/preonic_rev3_drop_layout_preonic_1x2uc_mine.json`
 - press the "COMPILE" button and then download the firmware
 - `qmk setup`
-- `qmk flash -bl dfu-util ~/Downloads/preonic_rev3_drop_preonic_rev3_drop_layout_preonic_1x2uc_mine.bin`
+- `cd keyboards/preonic/keymaps/filippovitale`
+- `qmk flash -bl dfu-util preonic_rev3_drop_preonic_rev3_drop_filippovitale.bin`
 
 ## Convert JSON config file to a keymap.c
 

@@ -40,13 +40,16 @@
  *
  *  Header file for Descriptors.c.
  */
-#ifndef _DESCRIPTORS_H_
-#define _DESCRIPTORS_H_
+
+#pragma once
 
 #include <LUFA/Drivers/USB/USB.h>
 
 #ifdef PROTOCOL_CHIBIOS
-#    include "hal.h"
+#    include <hal.h>
+#    if STM32_USB_USE_OTG1 == TRUE || STM32_USB_USE_OTG2 == TRUE
+#        define USB_ENDPOINTS_ARE_REORDERABLE
+#    endif
 #endif
 
 /*
@@ -60,6 +63,11 @@ typedef struct {
     USB_Descriptor_Interface_t Keyboard_Interface;
     USB_HID_Descriptor_HID_t   Keyboard_HID;
     USB_Descriptor_Endpoint_t  Keyboard_INEndpoint;
+#else
+    // Shared Interface
+    USB_Descriptor_Interface_t Shared_Interface;
+    USB_HID_Descriptor_HID_t   Shared_HID;
+    USB_Descriptor_Endpoint_t  Shared_INEndpoint;
 #endif
 
 #ifdef RAW_ENABLE
@@ -70,6 +78,13 @@ typedef struct {
     USB_Descriptor_Endpoint_t  Raw_OUTEndpoint;
 #endif
 
+#ifdef PLOVER_HID_ENABLE
+    // Plover HID Interface
+    USB_Descriptor_Interface_t Plover_Interface;
+    USB_HID_Descriptor_HID_t   Plover_HID;
+    USB_Descriptor_Endpoint_t  Plover_INEndpoint;
+#endif
+
 #if defined(MOUSE_ENABLE) && !defined(MOUSE_SHARED_EP)
     // Mouse HID Interface
     USB_Descriptor_Interface_t Mouse_Interface;
@@ -77,7 +92,7 @@ typedef struct {
     USB_Descriptor_Endpoint_t  Mouse_INEndpoint;
 #endif
 
-#ifdef SHARED_EP_ENABLE
+#if defined(SHARED_EP_ENABLE) && !defined(KEYBOARD_SHARED_EP)
     // Shared Interface
     USB_Descriptor_Interface_t Shared_Interface;
     USB_HID_Descriptor_HID_t   Shared_HID;
@@ -89,7 +104,6 @@ typedef struct {
     USB_Descriptor_Interface_t Console_Interface;
     USB_HID_Descriptor_HID_t   Console_HID;
     USB_Descriptor_Endpoint_t  Console_INEndpoint;
-    USB_Descriptor_Endpoint_t  Console_OUTEndpoint;
 #endif
 
 #ifdef MIDI_ENABLE
@@ -123,6 +137,20 @@ typedef struct {
     USB_Descriptor_Endpoint_t  CDC_DataOutEndpoint;
     USB_Descriptor_Endpoint_t  CDC_DataInEndpoint;
 #endif
+
+#if defined(JOYSTICK_ENABLE) && !defined(JOYSTICK_SHARED_EP)
+    // Joystick HID Interface
+    USB_Descriptor_Interface_t Joystick_Interface;
+    USB_HID_Descriptor_HID_t   Joystick_HID;
+    USB_Descriptor_Endpoint_t  Joystick_INEndpoint;
+#endif
+
+#if defined(DIGITIZER_ENABLE) && !defined(DIGITIZER_SHARED_EP)
+    // Digitizer HID Interface
+    USB_Descriptor_Interface_t Digitizer_Interface;
+    USB_HID_Descriptor_HID_t   Digitizer_HID;
+    USB_Descriptor_Endpoint_t  Digitizer_INEndpoint;
+#endif
 } USB_Descriptor_Configuration_t;
 
 /*
@@ -132,6 +160,7 @@ enum usb_interfaces {
 #ifndef KEYBOARD_SHARED_EP
     KEYBOARD_INTERFACE,
 #else
+    SHARED_INTERFACE,
 #    define KEYBOARD_INTERFACE SHARED_INTERFACE
 #endif
 
@@ -142,11 +171,15 @@ enum usb_interfaces {
     RAW_INTERFACE,
 #endif
 
+#ifdef PLOVER_HID_ENABLE
+    PLOVER_HID_INTERFACE,
+#endif
+
 #if defined(MOUSE_ENABLE) && !defined(MOUSE_SHARED_EP)
     MOUSE_INTERFACE,
 #endif
 
-#ifdef SHARED_EP_ENABLE
+#if defined(SHARED_EP_ENABLE) && !defined(KEYBOARD_SHARED_EP)
     SHARED_INTERFACE,
 #endif
 
@@ -164,8 +197,17 @@ enum usb_interfaces {
     CDI_INTERFACE,
 #endif
 
+#if defined(JOYSTICK_ENABLE) && !defined(JOYSTICK_SHARED_EP)
+    JOYSTICK_INTERFACE,
+#endif
+
+#if defined(DIGITIZER_ENABLE) && !defined(DIGITIZER_SHARED_EP)
+    DIGITIZER_INTERFACE,
+#endif
     TOTAL_INTERFACES
 };
+
+#define IS_VALID_INTERFACE(i) ((i) >= 0 && (i) < TOTAL_INTERFACES)
 
 #define NEXT_EPNUM __COUNTER__
 
@@ -173,7 +215,7 @@ enum usb_interfaces {
  * Endpoint numbers
  */
 enum usb_endpoints {
-    __unused_epnum__ = NEXT_EPNUM,  // Endpoint numbering starts at 1
+    __unused_epnum__ = NEXT_EPNUM, // Endpoint numbering starts at 1
 
 #ifndef KEYBOARD_SHARED_EP
     KEYBOARD_IN_EPNUM = NEXT_EPNUM,
@@ -188,8 +230,16 @@ enum usb_endpoints {
 #endif
 
 #ifdef RAW_ENABLE
-    RAW_IN_EPNUM  = NEXT_EPNUM,
+    RAW_IN_EPNUM = NEXT_EPNUM,
+#    ifdef USB_ENDPOINTS_ARE_REORDERABLE
+#        define RAW_OUT_EPNUM RAW_IN_EPNUM
+#    else
     RAW_OUT_EPNUM = NEXT_EPNUM,
+#    endif
+#endif
+
+#ifdef PLOVER_HID_ENABLE
+    PLOVER_HID_IN_EPNUM = NEXT_EPNUM,
 #endif
 
 #ifdef SHARED_EP_ENABLE
@@ -198,31 +248,41 @@ enum usb_endpoints {
 
 #ifdef CONSOLE_ENABLE
     CONSOLE_IN_EPNUM = NEXT_EPNUM,
-
-#    ifdef PROTOCOL_CHIBIOS
-    // ChibiOS has enough memory and descriptor to actually enable the endpoint
-    // It could use the same endpoint numbers, as that's supported by ChibiOS
-    // But the QMK code currently assumes that the endpoint numbers are different
-    CONSOLE_OUT_EPNUM = NEXT_EPNUM,
-#    else
-#        define CONSOLE_OUT_EPNUM CONSOLE_IN_EPNUM
-#    endif
 #endif
 
 #ifdef MIDI_ENABLE
-    MIDI_STREAM_IN_EPNUM  = NEXT_EPNUM,
+    MIDI_STREAM_IN_EPNUM = NEXT_EPNUM,
+#    ifdef USB_ENDPOINTS_ARE_REORDERABLE
+#        define MIDI_STREAM_OUT_EPNUM MIDI_STREAM_IN_EPNUM
+#    else
     MIDI_STREAM_OUT_EPNUM = NEXT_EPNUM,
-#    define MIDI_STREAM_IN_EPADDR (ENDPOINT_DIR_IN | MIDI_STREAM_IN_EPNUM)
-#    define MIDI_STREAM_OUT_EPADDR (ENDPOINT_DIR_OUT | MIDI_STREAM_OUT_EPNUM)
+#    endif
 #endif
 
 #ifdef VIRTSER_ENABLE
     CDC_NOTIFICATION_EPNUM = NEXT_EPNUM,
     CDC_IN_EPNUM           = NEXT_EPNUM,
-    CDC_OUT_EPNUM          = NEXT_EPNUM,
-#    define CDC_NOTIFICATION_EPADDR (ENDPOINT_DIR_IN | CDC_NOTIFICATION_EPNUM)
-#    define CDC_IN_EPADDR (ENDPOINT_DIR_IN | CDC_IN_EPNUM)
-#    define CDC_OUT_EPADDR (ENDPOINT_DIR_OUT | CDC_OUT_EPNUM)
+#    ifdef USB_ENDPOINTS_ARE_REORDERABLE
+#        define CDC_OUT_EPNUM CDC_IN_EPNUM
+#    else
+    CDC_OUT_EPNUM = NEXT_EPNUM,
+#    endif
+#endif
+
+#ifdef JOYSTICK_ENABLE
+#    if !defined(JOYSTICK_SHARED_EP)
+    JOYSTICK_IN_EPNUM = NEXT_EPNUM,
+#    else
+#        define JOYSTICK_IN_EPNUM SHARED_IN_EPNUM
+#    endif
+#endif
+
+#ifdef DIGITIZER_ENABLE
+#    if !defined(DIGITIZER_SHARED_EP)
+    DIGITIZER_IN_EPNUM = NEXT_EPNUM,
+#    else
+#        define DIGITIZER_IN_EPNUM SHARED_IN_EPNUM
+#    endif
 #endif
 };
 
@@ -234,20 +294,20 @@ enum usb_endpoints {
 #    define MAX_ENDPOINTS USB_MAX_ENDPOINTS
 #endif
 
-// TODO - ARM_ATSAM
-
 #if (NEXT_EPNUM - 1) > MAX_ENDPOINTS
 #    error There are not enough available endpoints to support all functions. Please disable one or more of the following: Mouse Keys, Extra Keys, Console, NKRO, MIDI, Serial, Steno
 #endif
 
 #define KEYBOARD_EPSIZE 8
 #define SHARED_EPSIZE 32
-#define MOUSE_EPSIZE 8
+#define MOUSE_EPSIZE 16
 #define RAW_EPSIZE 32
+#define PLOVER_HID_EPSIZE 9
 #define CONSOLE_EPSIZE 32
 #define MIDI_STREAM_EPSIZE 64
 #define CDC_NOTIFICATION_EPSIZE 8
 #define CDC_EPSIZE 16
+#define JOYSTICK_EPSIZE 8
+#define DIGITIZER_EPSIZE 8
 
-uint16_t get_usb_descriptor(const uint16_t wValue, const uint16_t wIndex, const void** const DescriptorAddress);
-#endif
+uint16_t get_usb_descriptor(const uint16_t wValue, const uint16_t wIndex, const uint16_t wLength, const void** const DescriptorAddress);
